@@ -84,20 +84,6 @@
 		await downloadFileToCheerpJ();
 		hideElement(progressBar);
 		showElement(display);
-		showElement(timer);
-
-		const timerChecker = setInterval(() => {
-			timeLeft--;
-			if (timeLeft < 0) {
-				clearInterval(timerChecker);
-				hideElement(display);
-				hideElement(timer);
-				showElement(timeoutInfo);
-				document.exitPointerLock();
-				document.activeElement?.blur();
-				tryPlausible('EndDemo');
-			}
-		}, 1000);
 
 		tryPlausible('Play');
 		await cheerpjRunMain('net.minecraft.client.Minecraft', pathJarLibs);
@@ -153,46 +139,11 @@
 	<div id="intro" class="intro">
 		<p>This is a proof-of-concept demo of Minecraft 1.2.5 running unmodified in the browser.</p>
 
-		{#if !eulaAccepted}
-			<p>
-				<input type="checkbox" bind:checked={eulaAccepted} />
-				Before playing, you have to accept the
-				<a href="https://www.minecraft.net/eula" target="_blank">Minecraft EULA</a>
-			</p>
-		{/if}
+		<p>Clicking the button below will download the client from mojang.com.</p>
+		<button on:click={startGame}>Play!</button>
 
-		{#if eulaAccepted}
-			<p>Clicking the button below will download the client from mojang.com.</p>
-			<button on:click={startGame}>Play!</button>
-		{/if}
-
-		<div class="disclaimer">
-			This is not an official Minecraft product. It is not approved by or associated with Mojang or
-			Microsoft.
-		</div>
 	</div>
 	<progress id="progress-bar"></progress>
 	<div id="display" class="display"></div>
-	<div id="timeout-info" class="timeout-info">
-		<h1 class="title">DEMO TIMEOUT</h1>
-		<p>Thanks for playing this CheerpJ demo.</p>
-		<p>
-			<a href="https://cheerpj.com" target="_blank">CheerpJ</a> is a WebAssembly JVM for the browser
-			that can run any Java application, applet and library in the browser. Java 8, 11 and 17 are
-			currently supported. Advanced features such as multithreading, reflection and custom
-			classloaders are also fully supported, for more information you can join our
-			<a href="https://discord.gg/7xXW6NAdHT" target="_blank">Discord</a>.
-		</p>
-		<p>
-			Want to support us? Star Browsercraft on <a
-				href="https://github.com/leaningtech/browsercraft"
-				target="_blank">Github</a
-			>.
-		</p>
-		<img src={ghGIF} alt="Github rate us" />
-	</div>
-	<div id="timeout-timer" class="timeout-timer">
-		<p>{formatTime(timeLeft)}</p>
-	</div>
 	<PageControls />
 </div>

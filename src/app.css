@@ -68,8 +68,8 @@ main a:hover {
 	color: #eee;
 	color-scheme: dark;
 	position: relative;
-	width: auto;
-	height: auto;
+	width: 100%;
+	height: 100vh;
 	box-sizing: border-box;
 }
 
@@ -126,9 +126,8 @@ main a:hover {
 
 .display {
 	display: none;
-	aspect-ratio: 8 / 5;
-	width: 800px;
-	height: 500px;
+	width: 100%;
+	height: 100%;
 	inset: 0;
 }
 

@@ -4,5 +4,8 @@
 </script>
 
 <main>
-	<GameDisplay />
+	<div class="game-container">
+		<GameDisplay />
+	</div>
+	
 </main>

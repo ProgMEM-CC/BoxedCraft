@@ -102,6 +102,7 @@
 		const urlDownloadMinecraft = clientJsonData.downloads.client.url; // Get Minecraft Jar URL
 		await downloadLibFileCheerpj(urlDownloadMinecraft, pathJarMinecraft); // Download Minecraft Jar
 		var pathJarLibs = ``;
+		pathJarLibs += pathJarMinecraft;
 		// Download Libs and Appends Libs to pathJarLibs
 		for (const lib of clientJsonData.libraries) {
 			if (lib.downloads.artifact){
@@ -128,7 +129,6 @@
 		hideElement(progressBar);
 		showElement(display);
 		console.log(pathJarLibs);
-		pathJarLibs += pathJarMinecraft;
 		tryPlausible('Play');
 		await cheerpjRunMain('net.minecraft.client.main.Main', pathJarLibs);
 	}

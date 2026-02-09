@@ -121,7 +121,7 @@
 
 				await downloadLibFileCheerpj(urlLib, pathLib);
 				console.log(`Downloaded: ${urlLib}`);
-				pathJarLibs += `${pathLib}:`;
+				pathJarLibs += `:${pathLib}`;
 				console.log(`Added to classpath: ${pathLib}`);
 				console.log(`Current classpath: ${pathJarLibs}`);
 			}

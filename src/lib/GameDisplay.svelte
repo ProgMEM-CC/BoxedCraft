@@ -120,10 +120,13 @@
 				await downloadLibFileCheerpj(urlLib, pathLib);
 				console.log(`Downloaded: ${urlLib}`);
 				pathJarLibs += `${pathLib}:`;
+				console.log(`Added to classpath: ${pathLib}`);
+				console.log(`Current classpath: ${pathJarLibs}`);
 			}
 		}
 		hideElement(progressBar);
 		showElement(display);
+		console.log(pathJarLibs);
 		pathJarLibs += pathJarMinecraft;
 		tryPlausible('Play');
 		await cheerpjRunMain('net.minecraft.client.main.Main', pathJarLibs);

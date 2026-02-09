@@ -1,14 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { tryPlausible, showElement, hideElement, formatTime } from './utilities';
-	import spinnerWhite from '$lib/assets/loading-spinner-white.svg';
-	import ghGIF from '$lib/assets/rate-us-on-gh.gif';
 	import PageControls from './PageControls.svelte';
 
 	const pathJarMinecraft = '/files/client_1.2.5.jar';
-	const urlDownloadMinecraft =
-		'https://piston-data.mojang.com/v1/objects/3870888a6c3d349d3771a3e9d16c9bf5e076b908/client.jar';
-	const pathJarLibs = `/app/lwjgl/lwjgl-2.9.3.jar:/app/lwjgl/lwjgl_util-2.9.3.jar:/app/jopt/jopt-simple-4.6.jar:${pathJarMinecraft}`;
+	const urlJsonMinecraftClient = 
+		"https://piston-meta.mojang.com/v1/packages/856d9bec08b0d567de39f46efaf4b76066b53059/1.8.9.json";
+
 
 	let loading: HTMLDivElement;
 	let display: HTMLDivElement;
@@ -16,9 +14,6 @@
 	let progressBar: HTMLProgressElement;
 	let timeoutInfo: HTMLDivElement;
 	let timer: HTMLDivElement;
-	// The demo is limited to 3 minutes, and not intended to replace the full game
-	let timeLeft = 180;
-	let eulaAccepted = false;
 
 	async function startCheerpJ() {
 		await cheerpjInit({
@@ -76,21 +71,38 @@
 		hideElement(loading);
 		showElement(intro);
 	}
+	async function loadClientJson(url: string){
+		const res = await fetch(url);
+		const data = await res.json();
+		return data;
+	}
 
 	async function startGame() {
 		hideElement(intro);
 		showElement(progressBar);
+		const clientJsonData = await loadClientJson(urlJsonMinecraftClient); // Load Client JSON Data
+		const urlDownloadMinecraft = clientJsonData.downloads.client.url; // Get Minecraft Jar URL
+		await downloadLibFileCheerpj(urlDownloadMinecraft, pathJarMinecraft); // Download Minecraft Jar
+		var pathJarLibs = ``;
+		// Download Libs and Appends Libs to pathJarLibs
+		for (const lib of clientJsonData.libraries) {
+			if (lib.downloads.artifact){
+				const UrlLib = lib.downloads.artifact.url;
+				const pathLib = `/files/libraries/${lib.downloads.artifact.path}`;
 
-		await downloadFileToCheerpJ();
+				await downloadLibFileCheerpj(UrlLib, pathLib);
+				pathJarLibs += `${pathLib}:`;
+			}
+		}
 		hideElement(progressBar);
 		showElement(display);
-
+		pathJarLibs += pathJarMinecraft;
 		tryPlausible('Play');
 		await cheerpjRunMain('net.minecraft.client.main.Main', pathJarLibs);
 	}
 
-	async function downloadFileToCheerpJ() {
-		const response = await fetch(urlDownloadMinecraft);
+	async function downloadLibFileCheerpj(url: string,path: string) {
+		const response = await fetch(url);
 		const reader = response.body.getReader();
 		const contentLength = +response.headers.get('Content-Length');
 
@@ -111,7 +123,7 @@
 		// Write to CheerpJ filesystem
 		return new Promise((resolve, reject) => {
 			var fds = [];
-			cheerpOSOpen(fds, pathJarMinecraft, 'w', (fd) => {
+			cheerpOSOpen(fds, path, 'w', (fd) => {
 				cheerpOSWrite(fds, fd, bytes, 0, bytes.length, (w) => {
 					cheerpOSClose(fds, fd, resolve);
 				});
@@ -137,9 +149,9 @@
 		<p class="text-center">Loading CheerpJ ...</p>
 	</div>
 	<div id="intro" class="intro">
-		<p>This is a proof-of-concept demo of Minecraft 1.2.5 running unmodified in the browser.</p>
+		<p>This is real Minecraft JAVA unmodified in the browser.</p>
 
-		<p>Clicking the button below will download the client from mojang.com.</p>
+		<p>Clicking the button below will download the client and libs from mojang.com.</p>
 		<button on:click={startGame}>Play!</button>
 
 	</div>

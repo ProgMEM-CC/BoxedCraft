@@ -5,3 +5,6 @@ const cheerpOSOpen: any;
 const cheerpOSWrite: any;
 const cheerpOSClose: any;
 const cheerpOSMkdir: any;
+const cheerpOSMkDir: any;
+const cheerpOSMkdirs: any;
+const cheerpOSMkDirs: any;

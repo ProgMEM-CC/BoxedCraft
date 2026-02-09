@@ -228,7 +228,13 @@
 	}
 
 	async function ensureDir(dir: string) {
-		const mkdir = (globalThis as any).cheerpOSMkdir;
+		const g: any = globalThis as any;
+		const mkdir: any =
+			g.cheerpOSMkdir ??
+			g.cheerpOSMkDir ??
+			g.cheerpOSMkdirs ??
+			g.cheerpOSMkDirs ??
+			null;
 		if (typeof mkdir !== 'function') return;
 		const parts = dir.split('/').filter(Boolean);
 		let current = '';
@@ -237,7 +243,15 @@
 			await new Promise<void>((resolve) => {
 				// Ignore errors (e.g., already exists) to keep this idempotent.
 				try {
-					mkdir(current, resolve);
+					if (mkdir.length >= 3) {
+						// Some builds expect (fds, path, cb)
+						mkdir([], current, resolve);
+					} else if (mkdir.length === 2) {
+						mkdir(current, resolve);
+					} else {
+						mkdir(current);
+						resolve();
+					}
 				} catch {
 					resolve();
 				}

@@ -69,6 +69,7 @@
 				'/lt/8/lib/tzdb.dat': [0, 131072]
 			}
 		});
+		console.log(`cheerpOSMkdir after cheerpjInit: ${globalThis.cheerpOSMkdir}`);
 		await cheerpjCreateDisplay(-1, -1, display);
 
 		hideElement(loading);

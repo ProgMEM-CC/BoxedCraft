@@ -9,7 +9,7 @@
 		"https://piston-meta.mojang.com/v1/packages/856d9bec08b0d567de39f46efaf4b76066b53059/1.8.9.json";
 
 	const proxy = "api.cors.lol/?url=";
-	const FORCE_LOCAL = true;
+	const FORCE_LOCAL = false;
 	let loading: HTMLDivElement;
 	let display: HTMLDivElement;
 	let intro: HTMLDivElement;
@@ -84,7 +84,7 @@
 		hideElement(intro);
 		showElement(progressBar);
 		// Test Proxy requirement
-		var proxyRequired = true;
+		var proxyRequired = false;
 		var localProxy = false;
 		try {
 			await fetch("https://libraries.minecraft.net/com/mojang/netty/1.6/netty-1.6.jar");
@@ -133,7 +133,11 @@
 		await cheerpjRunMain('net.minecraft.client.main.Main', pathJarLibs);
 	}
 	async function downloadLibFileCheerpj(url: string, path: string) {
+		await ensureParentDir(path);
 		const response = await fetch(url);
+		if (!response.ok) {
+			throw new Error(`Failed to fetch ${url} (${response.status})`);
+		}
 		const reader = response.body.getReader();
 		const chunks: Uint8Array[] = [];
 		let received = 0;
@@ -161,11 +165,24 @@
 			offset += chunk.length;
 		}
 
+		// Guard: verify this looks like a JAR/ZIP (starts with "PK")
+		if (bytes.length < 4 || bytes[0] !== 0x50 || bytes[1] !== 0x4b) {
+			throw new Error(`Invalid JAR content for ${url}`);
+		}
+
 		// Write to CheerpJ filesystem
 		return new Promise((resolve, reject) => {
 			var fds = [];
 			cheerpOSOpen(fds, path, 'w', (fd) => {
+				if (fd < 0) {
+					reject(new Error(`Failed to open ${path} (fd=${fd})`));
+					return;
+				}
 				cheerpOSWrite(fds, fd, bytes, 0, bytes.length, (w) => {
+					if (w < 0) {
+						reject(new Error(`Failed to write ${path} (w=${w})`));
+						return;
+					}
 					cheerpOSClose(fds, fd, resolve);
 				});
 			});
@@ -173,6 +190,7 @@
 	}
 
 	async function downloadLibFileCheerpjOLDAPI(url: string,path: string) {
+		await ensureParentDir(path);
 		const response = await fetch(url);
 		const reader = response.body.getReader();
 		const contentLength = +response.headers.get('Content-Length');
@@ -200,6 +218,31 @@
 				});
 			});
 		});
+	}
+
+	async function ensureParentDir(path: string) {
+		const lastSlash = path.lastIndexOf('/');
+		if (lastSlash <= 0) return;
+		const dir = path.slice(0, lastSlash);
+		await ensureDir(dir);
+	}
+
+	async function ensureDir(dir: string) {
+		const mkdir = (globalThis as any).cheerpOSMkdir;
+		if (typeof mkdir !== 'function') return;
+		const parts = dir.split('/').filter(Boolean);
+		let current = '';
+		for (const part of parts) {
+			current += `/${part}`;
+			await new Promise<void>((resolve) => {
+				// Ignore errors (e.g., already exists) to keep this idempotent.
+				try {
+					mkdir(current, resolve);
+				} catch {
+					resolve();
+				}
+			});
+		}
 	}
 
 	onMount(async () => {

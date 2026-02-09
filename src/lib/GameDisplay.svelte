@@ -9,6 +9,7 @@
 		"https://piston-meta.mojang.com/v1/packages/856d9bec08b0d567de39f46efaf4b76066b53059/1.8.9.json";
 
 	const proxy = "api.cors.lol/?url=";
+	const FORCE_LOCAL = true;
 	let loading: HTMLDivElement;
 	let display: HTMLDivElement;
 	let intro: HTMLDivElement;
@@ -82,7 +83,7 @@
 		hideElement(intro);
 		showElement(progressBar);
 		// Test Proxy requirement
-		var proxyRequired = false;
+		var proxyRequired = true;
 		var localProxy = false;
 		try {
 			await fetch("https://libraries.minecraft.net/com/mojang/netty/1.6/netty-1.6.jar");
@@ -104,7 +105,7 @@
 		for (const lib of clientJsonData.libraries) {
 			if (lib.downloads.artifact){
 				if (proxyRequired) {
-					if(localProxy) {
+					if(localProxy || FORCE_LOCAL) {
 						lib.downloads.artifact.url = `/api/vercelProxy?url=${encodeURIComponent(lib.downloads.artifact.url)}`;
 					}
 					else

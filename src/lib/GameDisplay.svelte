@@ -8,7 +8,7 @@
 	const pathJarMinecraft = '/files/client_1.2.5.jar';
 	const urlDownloadMinecraft =
 		'https://piston-data.mojang.com/v1/objects/3870888a6c3d349d3771a3e9d16c9bf5e076b908/client.jar';
-	const pathJarLibs = `/app/lwjgl/lwjgl-2.9.3.jar:/app/lwjgl/lwjgl_util-2.9.3.jar:${pathJarMinecraft}`;
+	const pathJarLibs = `/app/lwjgl/lwjgl-2.9.3.jar:/app/lwjgl/lwjgl_util-2.9.3.jar:/app/jopt/jopt-simple-4.6.jar:${pathJarMinecraft}`;
 
 	let loading: HTMLDivElement;
 	let display: HTMLDivElement;

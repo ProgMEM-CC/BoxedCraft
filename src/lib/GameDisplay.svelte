@@ -83,11 +83,18 @@
 		showElement(progressBar);
 		// Test Proxy requirement
 		var proxyRequired = false;
+		var localProxy = false;
 		try {
 			await fetch("https://libraries.minecraft.net/com/mojang/netty/1.6/netty-1.6.jar");
 		}
 		catch (e) {
 			proxyRequired = true;
+			try {
+				await fetch(`https://${proxy}https://libraries.minecraft.net/com/mojang/netty/1.6/netty-1.6.jar`);
+			}
+			catch (e) {
+				localProxy = true;			
+			}
 		}
 		const clientJsonData = await loadClientJson(urlJsonMinecraftClient); // Load Client JSON Data
 		const urlDownloadMinecraft = clientJsonData.downloads.client.url; // Get Minecraft Jar URL
@@ -97,7 +104,13 @@
 		for (const lib of clientJsonData.libraries) {
 			if (lib.downloads.artifact){
 				if (proxyRequired) {
-					lib.downloads.artifact.url = `https://${proxy}${encodeURIComponent(lib.downloads.artifact.url)}`;
+					if(localProxy) {
+						lib.downloads.artifact.url = `/api/vercelProxy?url=${encodeURIComponent(lib.downloads.artifact.url)}`;
+					}
+					else
+					{
+						lib.downloads.artifact.url = `https://${proxy}${encodeURIComponent(lib.downloads.artifact.url)}`;
+					}
 				}
 				const urlLib = lib.downloads.artifact.url;
 				const pathLib = `/files/libraries/${lib.downloads.artifact.path}`;

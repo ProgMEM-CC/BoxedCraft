@@ -24,6 +24,7 @@
 			libraries: { 'libGL.so.1': '/app/lwjgl/libraries/gl4es.wasm' },
 			enableX11: true,
 			preloadResources: {
+				'/files/libraries/net/sf/jopt-simple/jopt-simple/4.6/jopt-simple-4.6.jar': [0, 131072],
 				'/lt/8/jre/lib/rt.jar': [
 					0, 131072, 1310720, 1572864, 4456448, 4849664, 5111808, 5505024, 7995392, 8126464,
 					9699328, 9830400, 9961472, 11534336, 11665408, 12189696, 12320768, 12582912, 13238272,

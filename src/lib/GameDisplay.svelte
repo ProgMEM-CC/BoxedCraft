@@ -8,7 +8,7 @@
 	const urlJsonMinecraftClient = 
 		"https://piston-meta.mojang.com/v1/packages/856d9bec08b0d567de39f46efaf4b76066b53059/1.8.9.json";
 
-
+	const proxy = "https://proxy.corsfix.com/?";
 	let loading: HTMLDivElement;
 	let display: HTMLDivElement;
 	let intro: HTMLDivElement;
@@ -81,6 +81,14 @@
 	async function startGame() {
 		hideElement(intro);
 		showElement(progressBar);
+		// Test Proxy requirement
+		var proxyRequired = false;
+		try {
+			await fetch("https://libraries.minecraft.net/com/mojang/netty/1.6/netty-1.6.jar");
+		}
+		catch (e) {
+			proxyRequired = true;
+		}
 		const clientJsonData = await loadClientJson(urlJsonMinecraftClient); // Load Client JSON Data
 		const urlDownloadMinecraft = clientJsonData.downloads.client.url; // Get Minecraft Jar URL
 		await downloadLibFileCheerpj(urlDownloadMinecraft, pathJarMinecraft); // Download Minecraft Jar
@@ -88,10 +96,13 @@
 		// Download Libs and Appends Libs to pathJarLibs
 		for (const lib of clientJsonData.libraries) {
 			if (lib.downloads.artifact){
-				const UrlLib = lib.downloads.artifact.url;
+				if (proxyRequired) {
+					lib.downloads.artifact.url = `https://${proxy}${encodeURIComponent(lib.downloads.artifact.url)}`;
+				}
+				const urlLib = lib.downloads.artifact.url;
 				const pathLib = `/files/libraries/${lib.downloads.artifact.path}`;
 
-				await downloadLibFileCheerpj(UrlLib, pathLib);
+				await downloadLibFileCheerpj(urlLib, pathLib);
 				pathJarLibs += `${pathLib}:`;
 			}
 		}

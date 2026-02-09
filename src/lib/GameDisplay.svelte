@@ -118,6 +118,7 @@
 				const pathLib = `/files/libraries/${lib.downloads.artifact.path}`;
 
 				await downloadLibFileCheerpj(urlLib, pathLib);
+				console.log(`Downloaded: ${urlLib}`);
 				pathJarLibs += `${pathLib}:`;
 			}
 		}

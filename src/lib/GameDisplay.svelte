@@ -8,7 +8,7 @@
 	const urlJsonMinecraftClient = 
 		"https://piston-meta.mojang.com/v1/packages/856d9bec08b0d567de39f46efaf4b76066b53059/1.8.9.json";
 
-	const proxy = "https://proxy.corsfix.com/?";
+	const proxy = "https://api.cors.lol/?url=";
 	let loading: HTMLDivElement;
 	let display: HTMLDivElement;
 	let intro: HTMLDivElement;

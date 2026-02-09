@@ -125,8 +125,47 @@
 		tryPlausible('Play');
 		await cheerpjRunMain('net.minecraft.client.main.Main', pathJarLibs);
 	}
+	async function downloadLibFileCheerpj(url: string, path: string) {
+		const response = await fetch(url);
+		const reader = response.body.getReader();
+		const chunks: Uint8Array[] = [];
+		let received = 0;
 
-	async function downloadLibFileCheerpj(url: string,path: string) {
+		// Optional: total size for progress bar
+		const contentLength = +response.headers.get('Content-Length') || 0;
+		if (contentLength) {
+			progressBar.max = contentLength;
+		}
+
+		while (true) {
+			const { done, value } = await reader.read();
+			if (done) break;
+			chunks.push(value);
+			received += value.length;
+
+			if (contentLength) progressBar.value = received;
+		}
+
+		// Concatenate all chunks into a single Uint8Array
+		const bytes = new Uint8Array(received);
+		let offset = 0;
+		for (const chunk of chunks) {
+			bytes.set(chunk, offset);
+			offset += chunk.length;
+		}
+
+		// Write to CheerpJ filesystem
+		return new Promise((resolve, reject) => {
+			var fds = [];
+			cheerpOSOpen(fds, path, 'w', (fd) => {
+				cheerpOSWrite(fds, fd, bytes, 0, bytes.length, (w) => {
+					cheerpOSClose(fds, fd, resolve);
+				});
+			});
+		});
+	}
+
+	async function downloadLibFileCheerpjOLDAPI(url: string,path: string) {
 		const response = await fetch(url);
 		const reader = response.body.getReader();
 		const contentLength = +response.headers.get('Content-Length');

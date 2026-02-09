@@ -173,7 +173,9 @@
 		// Write to CheerpJ filesystem
 		return new Promise((resolve, reject) => {
 			var fds = [];
+			console.log(`Attempting to open path: ${path}`);
 			cheerpOSOpen(fds, path, 'w', (fd) => {
+				console.log(`cheerpOSOpen returned fd: ${fd} for path: ${path}`);
 				if (fd < 0) {
 					reject(new Error(`Failed to open ${path} (fd=${fd})`));
 					return;
@@ -224,6 +226,7 @@
 		const lastSlash = path.lastIndexOf('/');
 		if (lastSlash <= 0) return;
 		const dir = path.slice(0, lastSlash);
+		console.log(`Ensuring parent directory: ${dir}`);
 		await ensureDir(dir);
 	}
 
@@ -235,24 +238,36 @@
 			g.cheerpOSMkdirs ??
 			g.cheerpOSMkDirs ??
 			null;
-		if (typeof mkdir !== 'function') return;
+		if (typeof mkdir !== 'function') {
+			console.log(`cheerpOSMkdir function not found!`);
+			return;
+		}
 		const parts = dir.split('/').filter(Boolean);
 		let current = '';
 		for (const part of parts) {
 			current += `/${part}`;
+			console.log(`Attempting to create directory: ${current}`);
 			await new Promise<void>((resolve) => {
 				// Ignore errors (e.g., already exists) to keep this idempotent.
 				try {
 					if (mkdir.length >= 3) {
 						// Some builds expect (fds, path, cb)
-						mkdir([], current, resolve);
+						mkdir([], current, (result) => {
+							console.log(`cheerpOSMkdir for ${current} returned: ${result}`);
+							resolve();
+						});
 					} else if (mkdir.length === 2) {
-						mkdir(current, resolve);
+						mkdir(current, (result) => {
+							console.log(`cheerpOSMkdir for ${current} returned: ${result}`);
+							resolve();
+						});
 					} else {
 						mkdir(current);
+						console.log(`cheerpOSMkdir for ${current} called without callback.`);
 						resolve();
 					}
-				} catch {
+				} catch (e) {
+					console.error(`Error during cheerpOSMkdir for ${current}:`, e);
 					resolve();
 				}
 			});

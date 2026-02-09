@@ -24,3 +24,4 @@ vite.config.ts.timestamp-*
 
 .vscode
 pnpm-lock.yaml
+.aider*

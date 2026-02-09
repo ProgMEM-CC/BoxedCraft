@@ -69,7 +69,6 @@
 				'/lt/8/lib/tzdb.dat': [0, 131072]
 			}
 		});
-		console.log(`cheerpOSMkdir after cheerpjInit: ${globalThis.cheerpOSMkdir}`);
 		await cheerpjCreateDisplay(-1, -1, display);
 
 		hideElement(loading);
@@ -233,16 +232,22 @@
 
 	async function ensureDir(dir: string) {
 		const g: any = globalThis as any;
-		const mkdir: any =
-			g.cheerpOSMkdir ??
-			g.cheerpOSMkDir ??
-			g.cheerpOSMkdirs ??
-			g.cheerpOSMkDirs ??
-			null;
+		let mkdir: any = null;
+
+		if (g.cheerpOS) {
+			console.log("globalThis.cheerpOS found.");
+			mkdir = g.cheerpOS.Mkdir ?? g.cheerpOS.mkdir ?? g.cheerpOS.Mkdirs ?? g.cheerpOS.mkdirs;
+		} else {
+			console.log("globalThis.cheerpOS not found. Checking global scope directly.");
+			mkdir = g.cheerpOSMkdir ?? g.cheerpOSMkDir ?? g.cheerpOSMkdirs ?? g.cheerpOSMkDirs;
+		}
+		
 		if (typeof mkdir !== 'function') {
-			console.log(`cheerpOSMkdir function not found!`);
+			console.log(`cheerpOSMkdir function not found after comprehensive search!`);
 			return;
 		}
+		console.log(`Using mkdir function: ${mkdir.name || 'anonymous'}`);
+
 		const parts = dir.split('/').filter(Boolean);
 		let current = '';
 		for (const part of parts) {
@@ -263,6 +268,7 @@
 							resolve();
 						});
 					} else {
+						// Fallback for mkdir without explicit callback
 						mkdir(current);
 						console.log(`cheerpOSMkdir for ${current} called without callback.`);
 						resolve();

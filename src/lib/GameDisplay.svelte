@@ -110,7 +110,8 @@
 					}
 					else
 					{
-						lib.downloads.artifact.url = `https://${proxy}${encodeURIComponent(lib.downloads.artifact.url)}`;
+						//lib.downloads.artifact.url = `https://${proxy}${encodeURIComponent(lib.downloads.artifact.url)}`;
+						lib.downloads.artifact.url = `/api/vercelProxy?url=${encodeURIComponent(lib.downloads.artifact.url)}`;
 					}
 				}
 				const urlLib = lib.downloads.artifact.url;

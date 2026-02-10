@@ -131,7 +131,7 @@
 				console.log(`Current classpath: ${pathJarLibs}`);
 			}
 		}
-		downloadLibFileCheerpj(clientJsonData.logging.client.file.url, Log4Jcfgpath);
+		await downloadLibFileCheerpj(clientJsonData.logging.client.file.url, Log4Jcfgpath);
 		hideElement(progressBar);
 		showElement(display);
 		console.log(pathJarLibs);
@@ -144,9 +144,9 @@
 				'--username', usernameInput.value,
 				'--version', String(versionID),
 				'--versionType', 'release',
-				'--assetIndex', clientJsonData.assets,
+				'--assetIndex', clientJsonData.assets.id,
 				'--uuid', '00000000-0000-0000-0000-000000000000',
-				'--accessToken', 'OFFLINE',
+				'--accessToken', '0',
 				'--userType', 'offline',
 			]
 		);

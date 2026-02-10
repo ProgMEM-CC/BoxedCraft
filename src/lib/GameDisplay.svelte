@@ -117,7 +117,7 @@
 					}
 				}
 				const urlLib = lib.downloads.artifact.url;
-				const pathLib = `/files/libraries/${lib.downloads.artifact.path}`;
+				const pathLib = `/files/${lib.downloads.artifact.sha1}.jar`;
 
 				await downloadLibFileCheerpj(urlLib, pathLib);
 				console.log(`Downloaded: ${urlLib}`);
@@ -133,7 +133,6 @@
 		await cheerpjRunMain('net.minecraft.client.main.Main', pathJarLibs);
 	}
 	async function downloadLibFileCheerpj(url: string, path: string) {
-		await ensureParentDir(path);
 		const response = await fetch(url);
 		if (!response.ok) {
 			throw new Error(`Failed to fetch ${url} (${response.status})`);
@@ -192,7 +191,6 @@
 	}
 
 	async function downloadLibFileCheerpjOLDAPI(url: string,path: string) {
-		await ensureParentDir(path);
 		const response = await fetch(url);
 		const reader = response.body.getReader();
 		const contentLength = +response.headers.get('Content-Length');
@@ -222,64 +220,7 @@
 		});
 	}
 
-	async function ensureParentDir(path: string) {
-		const lastSlash = path.lastIndexOf('/');
-		if (lastSlash <= 0) return;
-		const dir = path.slice(0, lastSlash);
-		console.log(`Ensuring parent directory: ${dir}`);
-		await ensureDir(dir);
-	}
 
-	async function ensureDir(dir: string) {
-		const g: any = globalThis as any;
-		let mkdir: any = null;
-
-		if (g.cheerpOS) {
-			console.log("globalThis.cheerpOS found.");
-			mkdir = g.cheerpOS.Mkdir ?? g.cheerpOS.mkdir ?? g.cheerpOS.Mkdirs ?? g.cheerpOS.mkdirs;
-		} else {
-			console.log("globalThis.cheerpOS not found. Checking global scope directly.");
-			mkdir = g.cheerpOSMkdir ?? g.cheerpOSMkDir ?? g.cheerpOSMkdirs ?? g.cheerpOSMkDirs;
-		}
-		
-		if (typeof mkdir !== 'function') {
-			console.log(`cheerpOSMkdir function not found after comprehensive search!`);
-			return;
-		}
-		console.log(`Using mkdir function: ${mkdir.name || 'anonymous'}`);
-
-		const parts = dir.split('/').filter(Boolean);
-		let current = '';
-		for (const part of parts) {
-			current += `/${part}`;
-			console.log(`Attempting to create directory: ${current}`);
-			await new Promise<void>((resolve) => {
-				// Ignore errors (e.g., already exists) to keep this idempotent.
-				try {
-					if (mkdir.length >= 3) {
-						// Some builds expect (fds, path, cb)
-						mkdir([], current, (result) => {
-							console.log(`cheerpOSMkdir for ${current} returned: ${result}`);
-							resolve();
-						});
-					} else if (mkdir.length === 2) {
-						mkdir(current, (result) => {
-							console.log(`cheerpOSMkdir for ${current} returned: ${result}`);
-							resolve();
-						});
-					} else {
-						// Fallback for mkdir without explicit callback
-						mkdir(current);
-						console.log(`cheerpOSMkdir for ${current} called without callback.`);
-						resolve();
-					}
-				} catch (e) {
-					console.error(`Error during cheerpOSMkdir for ${current}:`, e);
-					resolve();
-				}
-			});
-		}
-	}
 
 	onMount(async () => {
 		loading = document.getElementById('loading');

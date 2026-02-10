@@ -189,9 +189,6 @@
 		}
 
 		// Guard: verify this looks like a JAR/ZIP (starts with "PK")
-		if (bytes.length < 4 || bytes[0] !== 0x50 || bytes[1] !== 0x4b) {
-			throw new Error(`Invalid JAR content for ${url}`);
-		}
 		progressBar.value = 0;
 		// Write to CheerpJ filesystem
 		return new Promise((resolve, reject) => {

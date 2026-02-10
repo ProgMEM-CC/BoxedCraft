@@ -142,11 +142,11 @@
 			[
 				// `-Dlog4j.configurationFile=${Log4Jcfgpath}`,
 				'--username', usernameInput.value,
-				'--version', String(versionID),
+				'--version', "1.8,9",
 				'--versionType', 'release',
 				'--assetIndex', clientJsonData.assets.id,
 				'--uuid', '00000000-0000-0000-0000-000000000000',
-				'--accessToken', '0',
+				'--accessToken', '0000-0000-0000-0000-00000-00000',
 				'--userType', 'offline',
 			]
 		);

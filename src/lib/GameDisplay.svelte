@@ -6,7 +6,7 @@
 	import ghGIF from '$lib/assets/rate-us-on-gh.gif';
 	const pathJarMinecraft = '/files/client_1.2.5.jar';
 	const urlJsonMinecraftClient = 
-		"https://piston-meta.mojang.com/v1/packages/3f42d3ea921915b36c581a435ed03683a7023fb1/1.21.11.json";
+		"https://piston-meta.mojang.com/v1/packages/715ccf3330885e75b205124f09f8712542cbe7e0/1.20.1.json";
 
 	const proxy = "api.cors.lol/?url=";
 	const FORCE_LOCAL = false;

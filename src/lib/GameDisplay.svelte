@@ -21,7 +21,7 @@
 	async function startCheerpJ() {
 		await cheerpjInit({
 			version: 17,
-			javaProperties: ['java.library.path=/app/lwjgl/libraries/'],
+			javaProperties: ['java.library.path=/app/lwjgl/libraries/','log4j2.formatMsgNoLookups=true'],
 			libraries: { 'libGL.so.1': '/app/lwjgl/libraries/gl4es.wasm' },
 			enableX11: true,
 			preloadResources: {

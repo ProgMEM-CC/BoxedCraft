@@ -9,15 +9,22 @@
 //   res.send(Buffer.from(buffer));
 // }
 
+export const config = {
+	runtime: 'nodejs',
+};
+
 export default async function handler(req, res) {
 	const url = req.query.url;
 
+	if (!url) {
+		res.status(400).send('Missing url');
+		return;
+	}
+
 	const upstream = await fetch(url);
 
-	// Forward status
 	res.status(upstream.status);
 
-	// Forward important headers
 	const contentLength = upstream.headers.get('content-length');
 	if (contentLength) {
 		res.setHeader('Content-Length', contentLength);
@@ -30,10 +37,10 @@ export default async function handler(req, res) {
 
 	res.setHeader('Access-Control-Allow-Origin', '*');
 
-	// STREAM the body instead of buffering
-	if (upstream.body) {
-		upstream.body.pipe(res);
-	} else {
+	if (!upstream.body) {
 		res.end();
+		return;
 	}
+
+	upstream.body.pipe(res);
 }

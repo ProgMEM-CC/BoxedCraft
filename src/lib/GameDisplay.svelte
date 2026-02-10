@@ -16,6 +16,7 @@
 	let progressBar: HTMLProgressElement;
 	let timeoutInfo: HTMLDivElement;
 	let timer: HTMLDivElement;
+	let usernameInput: HTMLInputElement;
 
 	async function startCheerpJ() {
 		await cheerpjInit({

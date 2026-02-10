@@ -140,12 +140,12 @@
 			pathJarLibs,
 			[
 				'--username', usernameInput.value,
-				'--version', versionID,
+				'--version', String(versionID),
 				'--gameDir', '/files/',
 				'--assetsDir', '/files/assets/',
 				'--assetIndex', clientJsonData.assets,
 				'--uuid', '00000000-0000-0000-0000-000000000000',
-				'--accessToken', '',
+				'--accessToken', 'OFFLINE',
 				'--userType', 'offline',
 			]
 		);

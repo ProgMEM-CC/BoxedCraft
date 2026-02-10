@@ -20,7 +20,7 @@
 	const Log4Jcfgpath = '/files/log4j2.xml';
 	async function startCheerpJ() {
 		await cheerpjInit({
-			version: 17,
+			version: 8,
 			javaProperties: ['java.library.path=/app/lwjgl/libraries/',`-Dlog4j.configurationFile=${Log4Jcfgpath}`],
 			libraries: { 'libGL.so.1': '/app/lwjgl/libraries/gl4es.wasm' },
 			enableX11: true,

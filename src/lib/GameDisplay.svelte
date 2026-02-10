@@ -17,11 +17,11 @@
 	let timeoutInfo: HTMLDivElement;
 	let timer: HTMLDivElement;
 	let usernameInput: HTMLInputElement;
-
+	const Log4Jcfgpath = '/files/log4j2.xml';
 	async function startCheerpJ() {
 		await cheerpjInit({
 			version: 17,
-			javaProperties: ['java.library.path=/app/lwjgl/libraries/','log4j2.formatMsgNoLookups=true'],
+			javaProperties: ['java.library.path=/app/lwjgl/libraries/',`-Dlog4j.configurationFile=${Log4Jcfgpath}`],
 			libraries: { 'libGL.so.1': '/app/lwjgl/libraries/gl4es.wasm' },
 			enableX11: true,
 			preloadResources: {
@@ -131,6 +131,7 @@
 				console.log(`Current classpath: ${pathJarLibs}`);
 			}
 		}
+		downloadLibFileCheerpj(clientJsonData.logging.client.file.url, Log4Jcfgpath);
 		hideElement(progressBar);
 		showElement(display);
 		console.log(pathJarLibs);
@@ -139,6 +140,7 @@
 			'net.minecraft.client.main.Main', 
 			pathJarLibs,
 			[
+				`-Dlog4j.configurationFile=${Log4Jcfgpath}`,
 				'--username', usernameInput.value,
 				'--version', String(versionID),
 				'--versionType', 'release',

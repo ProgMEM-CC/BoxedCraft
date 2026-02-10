@@ -21,7 +21,7 @@
 	async function startCheerpJ() {
 		await cheerpjInit({
 			version: 8,
-			javaProperties: ['java.library.path=/app/lwjgl/libraries/',`-Dlog4j.configurationFile=${Log4Jcfgpath}`],
+			javaProperties: ['java.library.path=/app/lwjgl/libraries/',`-log4j.configurationFile=${Log4Jcfgpath}`],
 			libraries: { 'libGL.so.1': '/app/lwjgl/libraries/gl4es.wasm' },
 			enableX11: true,
 			preloadResources: {
@@ -140,7 +140,7 @@
 			'net.minecraft.client.main.Main', 
 			pathJarLibs,
 			[
-				`-Dlog4j.configurationFile=${Log4Jcfgpath}`,
+				// `-Dlog4j.configurationFile=${Log4Jcfgpath}`,
 				'--username', usernameInput.value,
 				'--version', String(versionID),
 				'--versionType', 'release',

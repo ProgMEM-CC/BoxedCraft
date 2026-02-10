@@ -117,7 +117,9 @@
 					}
 				}
 				const urlLib = lib.downloads.artifact.url;
-				const pathLib = `/files/${lib.downloads.artifact.sha1}.jar`;
+				const fileName = lib.downloads.artifact.path.split('/').pop();
+				const pathLib = `/files/${fileName}`;
+
 
 				await downloadLibFileCheerpj(urlLib, pathLib);
 				console.log(`Downloaded: ${urlLib}`);

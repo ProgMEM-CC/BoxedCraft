@@ -100,6 +100,8 @@
 		}
 		const clientJsonData = await loadClientJson(urlJsonMinecraftClient); // Load Client JSON Data
 		const urlDownloadMinecraft = clientJsonData.downloads.client.url; // Get Minecraft Jar URL
+		const versionID = clientJsonData.id; // Get Version ID
+		console.log(`Starting Minecraft version: ${versionID}`);
 		await downloadLibFileCheerpj(urlDownloadMinecraft, pathJarMinecraft); // Download Minecraft Jar
 		var pathJarLibs = ``;
 		pathJarLibs += pathJarMinecraft;
@@ -132,8 +134,26 @@
 		showElement(display);
 		console.log(pathJarLibs);
 		tryPlausible('Play');
-		await cheerpjRunMain('net.minecraft.client.main.Main', pathJarLibs);
+		await cheerpjRunMain(
+			'net.minecraft.client.main.Main', 
+			pathJarLibs,
+			[
+				'--username', usernameInput.value,
+				'--version', versionID,
+				'--gameDir', '/files/',
+				'--assetsDir', '/files/assets/',
+				'--assetIndex', clientJsonData.assets,
+				'--uuid', '00000000-0000-0000-0000-000000000000',
+				'--accessToken', '',
+				'--userType', 'offline',
+			]
+		);
 	}
+
+
+
+
+
 	async function downloadLibFileCheerpj(url: string, path: string) {
 		const response = await fetch(url);
 		if (!response.ok) {
@@ -231,7 +251,7 @@
 		progressBar = document.getElementById('progress-bar');
 		timeoutInfo = document.getElementById('timeout-info');
 		timer = document.getElementById('timeout-timer');
-
+		usernameInput = document.getElementById('usernameInput');
 		startCheerpJ();
 	});
 </script>
@@ -245,6 +265,7 @@
 		<p>This is real Minecraft JAVA unmodified in the browser.</p>
 
 		<p>Clicking the button below will download the client and libs from mojang.com.</p>
+		<input type="text" placeholder="Enter your UserName" id="usernameInput" />
 		<button on:click={startGame}>Play!</button>
 
 	</div>

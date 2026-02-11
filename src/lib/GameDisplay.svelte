@@ -20,6 +20,7 @@
 	const Log4Jcfgpath = '/files/log4j2.xml';
 	async function startCheerpJ() {
 		await cheerpjInit({
+			enableDebug: true,
 			version: 8,
 			javaProperties: ['java.library.path=/app/lwjgl/libraries/',`-log4j.configurationFile=${Log4Jcfgpath}`],
 			libraries: { 'libGL.so.1': '/app/lwjgl/libraries/gl4es.wasm' },
@@ -141,13 +142,13 @@
 			pathJarLibs,
 			[
 				// `-Dlog4j.configurationFile=${Log4Jcfgpath}`,
-				'username', usernameInput.value,
-				'version', "1.8,9",
-				'versionType', 'release',
-				'assetIndex', clientJsonData.assets.id,
-				'uuid', '00000000-0000-0000-0000-000000000000',
-				'accessToken', '0000-0000-0000-0000-00000-00000',
-				'userType', 'offline',
+				'--username', usernameInput.value,
+				'--version', "1.8,9",
+				'--versionType', 'release',
+				'--assetIndex', clientJsonData.assets.id,
+				'--uuid', '00000000-0000-0000-0000-000000000000',
+				'--accessToken', '0000-0000-0000-0000-00000-00000',
+				'--userType', 'offline',
 			]
 		);
 	}

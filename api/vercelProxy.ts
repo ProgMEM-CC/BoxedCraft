@@ -1,4 +1,5 @@
 // api/proxy.js
+import { Buffer } from "buffer";
 export default async function handler(req, res) {
   const url = req.query.url;
   const response = await fetch(url);

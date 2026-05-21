@@ -5,9 +5,8 @@
 	import spinnerWhite from '$lib/assets/loading-spinner-white.svg';
 	import ghGIF from '$lib/assets/rate-us-on-gh.gif';
 	const pathJarMinecraft = '/files/client_1.2.5.jar';
-	const urlJsonMinecraftClient = 
-		"https://piston-meta.mojang.com/v1/packages/856d9bec08b0d567de39f46efaf4b76066b53059/1.8.9.json";
-
+	//const urlJsonMinecraftClient = "https://piston-meta.mojang.com/v1/packages/856d9bec08b0d567de39f46efaf4b76066b53059/1.8.9.json";
+	const urlJsonMinecraftClient = "https://piston-meta.mojang.com/v1/packages/10d52c2d052078115cbbaf6e927b8a1af1ac206b/1.2.5.json";
 	const proxy = "api.cors.lol/?url=";
 	const FORCE_LOCAL = false;
 	let loading: HTMLDivElement;

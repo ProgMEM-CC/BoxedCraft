@@ -1,5 +1,7 @@
 # Browsercraft
 
+
+broken for now, not fixing anytime yet
 ## What is it
 
 Thanks to [Cheerpj](https://cheerpj.com), this project runs an alpha version of Minecraft (1.2.5) on the browser, without the requirement of having the JVM locally installed on the computer.

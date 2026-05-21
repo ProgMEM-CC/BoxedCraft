@@ -140,15 +140,13 @@
 		await cheerpjRunMain(
 			'net.minecraft.client.main.Main', 
 			pathJarLibs,
-			[
-				// `-Dlog4j.configurationFile=${Log4Jcfgpath}`,
-				'--username', usernameInput.value,
-				'--version', "1.8.9",
-				'--assetIndex', clientJsonData.assets.id,
-				'--uuid', '00000000-0000-0000-0000-000000000000',
-				'--accessToken', '0000-0000-0000-0000-00000-00000',
-				'--userType', 'offline',
-			]
+			// `-Dlog4j.configurationFile=${Log4Jcfgpath}`,
+			'--username', usernameInput.value,
+			'--version', "1.8.9",
+			'--assetIndex', clientJsonData.assets.id,
+			'--uuid', '00000000-0000-0000-0000-000000000000',
+			'--accessToken', '0000-0000-0000-0000-00000-00000',
+			'--userType', 'offline',
 		);
 	}
 

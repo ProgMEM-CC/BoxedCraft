@@ -107,8 +107,6 @@
 		await downloadLibFileCheerpj(urlDownloadMinecraft, pathJarMinecraft); // Download Minecraft Jar
 		var pathJarLibs = ``;
 		pathJarLibs += pathJarMinecraft;
-console.log("Client JAR size check (bytes expected)");
-console.log(pathJarMinecraft);
 		// Download Libs and Appends Libs to pathJarLibs
 		for (const lib of clientJsonData.libraries) {
 			if (lib.downloads.artifact){
@@ -201,6 +199,7 @@ console.log(pathJarMinecraft);
 					return;
 				}
 				cheerpOSWrite(fds, fd, bytes, 0, bytes.length, (w) => {
+					console.log("Write result:", w, "expected:", bytes.length);
 					if (w < 0) {
 						reject(new Error(`Failed to write ${path} (w=${w})`));
 						return;

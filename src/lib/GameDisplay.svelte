@@ -107,6 +107,8 @@
 		await downloadLibFileCheerpj(urlDownloadMinecraft, pathJarMinecraft); // Download Minecraft Jar
 		var pathJarLibs = ``;
 		pathJarLibs += pathJarMinecraft;
+console.log("Client JAR size check (bytes expected)");
+console.log(pathJarMinecraft);
 		// Download Libs and Appends Libs to pathJarLibs
 		for (const lib of clientJsonData.libraries) {
 			if (lib.downloads.artifact){
